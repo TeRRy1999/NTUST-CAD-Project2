@@ -108,6 +108,7 @@ void circuit::sche(vector <Node*> &container, int level, bool &item)
 
 void circuit::mrlcs(unsigned int latency)
 {
+    fileName += "r";
     cout << "Latency-constrained Scheduling\n";
 
     _and = 1; _or = 1; _not = 1;
@@ -160,6 +161,7 @@ void circuit::mrlcs(unsigned int latency)
 
 void circuit::mlrcs(unsigned int _andv, unsigned int _orv, unsigned int _notv)
 {
+    fileName += "l";
     cout << "Resource-constrained Scheduling\n";
     _and = _andv; _or = _orv; _not = _notv;
     if(_and == 0 || _or == 0 || _not==0){cout << "Gate cannot be zero" << endl; return;}
@@ -223,11 +225,8 @@ void circuit::alap() // calculate alap and slack base on the asap result
 
 void circuit::buildAsapCycle()
 {
-    for(unsigned int i = 0; i <= cycle; i++){
-        for(auto &node:graph) 
-            if(node.second.getasapV() == i)
-                cycleNode[i].push_back(&(node.second));
-    }
+    for(auto &node:graph)
+        cycleNode[node.second.getasapV()].push_back(&(node.second));
 }
 
 void circuit::visulLevel()
