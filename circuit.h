@@ -105,6 +105,8 @@ void circuit::sche(vector <Node*> &container, int level, bool &addItem)
 
 void circuit::mrlcs(unsigned int latency)
 {
+    cout << "Latency-constrained Scheduling\n";
+
     _and = 1; _or = 1; _not = 1;
     
     if(latency < cycle) {cout << "No feasible solution." << endl; return;}
@@ -155,6 +157,7 @@ void circuit::mrlcs(unsigned int latency)
 
 void circuit::mlrcs(unsigned int _andv, unsigned int _orv, unsigned int _notv)
 {
+    cout << "Resource-constrained Scheduling\n";
     _and = _andv; _or = _orv; _not = _notv;
     if(_and == 0 || _or == 0 || _not==0){cout << "Gate cannot be zero" << endl; return;}
     for(unsigned int i = 1; i <= cycle; i++){
