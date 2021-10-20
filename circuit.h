@@ -8,13 +8,14 @@ class circuit
 private:
     unordered_map <string, Node> graph;
     unordered_map <int, vector<Node*>> cycleNode;
+    string fileName;
     unsigned int cycle;
     unsigned int _and;
     unsigned int _or;
     unsigned int _not;
 
 public:
-    circuit(/* args */);
+    circuit(string filename);
     ~circuit();
     
     void asap(); // implemented the ASAP.
@@ -24,7 +25,7 @@ public:
     void moveOn(Node *node, int level);
     void resetTrav();
     void visulLevel();
-    void sche(vector <Node*> &container, int level, bool &addItem);
+    void sche(vector <Node*> &container, int level, bool &item);
     void removeNode(Node *node, int level);
     void mlrcs(unsigned int _and, unsigned int _or, unsigned int _not);
     void mrlcs(unsigned int latency);
@@ -35,7 +36,8 @@ public:
     Node* operator[](string name){return &graph[name];}
 };
 
-circuit::circuit(/* args */)
+circuit::circuit(string _file)
+:fileName(_file)
 {
 }
 
@@ -82,7 +84,7 @@ void circuit::moveOn(Node *node, int level)
     
 }
 
-void circuit::sche(vector <Node*> &container, int level, bool &addItem)
+void circuit::sche(vector <Node*> &container, int level, bool &item)
 {
     
     unsigned int index = 0;
@@ -94,12 +96,13 @@ void circuit::sche(vector <Node*> &container, int level, bool &addItem)
             index = i;
         }
     }
-    if(maxNode->getSlack() == 0){
-        addItem = true;
+    if(maxNode->getSlack() == 0 && item == true){
+        item = false;
         return;
     }
 
     moveOn(maxNode, level);
+    
     container.erase(container.begin() + index);
 }
 
@@ -129,24 +132,24 @@ void circuit::mrlcs(unsigned int latency)
             dif_or = orCont.size() - _or;
             dif_not = notCont.size() - _not;
 
-            bool item = false;
+            bool item = true;
             if(dif_and > 0){
                 for(unsigned int k = 0; k < dif_and; k++) {
                     sche(andCont, i, item);
-                    if(item) _and++;
+                    if(!item) _and++;
                 }
             }
 
             if(dif_or > 0){
                 for(unsigned int k = 0; k < dif_or; k++) {
                     sche(orCont, i, item);
-                    if(item) _or++;
+                    if(!item) _or++;
                 }
             }
             if(dif_not > 0){
                 for(unsigned int k = 0; k < dif_not; k++){
                     sche(notCont, i, item);
-                    if(item) _not++;
+                    if(!item) _not++;
                 }
             }
         }
@@ -168,7 +171,7 @@ void circuit::mlrcs(unsigned int _andv, unsigned int _orv, unsigned int _notv)
             if(node->getType() == "Or") orCont.push_back(node);
             if(node->getType() == "Not") notCont.push_back(node);
         }
-
+        
         int dif_and, dif_or, dif_not;
         dif_and = andCont.size() - _and;
         dif_or = orCont.size() - _or;
@@ -188,7 +191,6 @@ void circuit::mlrcs(unsigned int _andv, unsigned int _orv, unsigned int _notv)
             for(unsigned int k = 0; k < dif_not; k++) 
                 sche(notCont, i, item);
         }
-
     }
     visulLevel();
 }
@@ -230,16 +232,17 @@ void circuit::buildAsapCycle()
 
 void circuit::visulLevel()
 {
+    ofstream out(fileName);
     for(unsigned int i = 1; i <= cycle; i++){
-        cout << "-----level[" << i << "]-----" << endl;
+        out << "-----level[" << i << "]-----" << endl;
         for (auto &node:cycleNode[i]){
-            cout << node->getName() << ' '; 
+            out << node->getName() << ' '; 
         }
-        cout << '\n';
+        out << '\n';
     }
 
-    cout << "#AND: " << _and << '\n';
-    cout << "#OR: " << _or << '\n';
-    cout << "#NOT: " << _not << '\n';
-    cout << "END" << endl;
+    out << "#AND: " << _and << '\n';
+    out << "#OR: " << _or << '\n';
+    out << "#NOT: " << _not << '\n';
+    out << "END" << endl;
 }
