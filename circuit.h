@@ -96,8 +96,10 @@ void circuit::sche(vector <Node*> &container, int level, bool &item)
             index = i;
         }
     }
-    if(maxNode->getSlack() == 0 && item == true){
+
+    if(maxNode->getSlack() <= 0 && item == true){
         item = false;
+        container.erase(container.begin() + index);
         return;
     }
 
@@ -137,20 +139,20 @@ void circuit::mrlcs(unsigned int latency)
             if(dif_and > 0){
                 for(unsigned int k = 0; k < dif_and; k++) {
                     sche(andCont, i, item);
-                    if(!item) _and++;
+                    if(!item) {_and++; item = true;}
                 }
             }
 
             if(dif_or > 0){
                 for(unsigned int k = 0; k < dif_or; k++) {
                     sche(orCont, i, item);
-                    if(!item) _or++;
+                    if(!item) {_or++; item = true;}
                 }
             }
             if(dif_not > 0){
                 for(unsigned int k = 0; k < dif_not; k++){
                     sche(notCont, i, item);
-                    if(!item) _not++;
+                    if(!item) {_not++; item = true;}
                 }
             }
         }
