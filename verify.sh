@@ -14,7 +14,7 @@ for file in $(ls $dir); do
     ./list -r ./aoi_benchmark/$file 100
     echo /aoi_benchmark/$file sucess!
 
-    echo
+    echo =====================================
     echo
     
 done
