@@ -30,10 +30,7 @@ public:
     void mlrcs(unsigned int _and, unsigned int _or, unsigned int _not);
     void mrlcs(unsigned int latency);
 
-
     unordered_map <string, Node> &getgraph() {return graph;}
-    
-    Node* operator[](string name){return &graph[name];}
 };
 
 circuit::circuit(string _file)
@@ -52,7 +49,6 @@ void circuit::resetTrav()
             node.second.setTrav(false);
         }
 }
-
 
 void circuit::recursive(Node *node, int level, bool forMove)
 {

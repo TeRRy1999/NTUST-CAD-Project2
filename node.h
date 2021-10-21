@@ -14,19 +14,17 @@ private:
     int slack;
     unsigned int asapV;
     unsigned int alapV;
-    unsigned int level;
 
     bool trav;
 
 public:
-    Node(/* args */):asapV(0), alapV(0), level(0), slack(0), trav(false){};
+    Node(/* args */):asapV(0), alapV(0), slack(0), trav(false){};
     
     //setter
     void setType(string in_tyep) {type = in_tyep;}
     void setName(string in_name) {name = in_name;}
 
     void setSlack(int val)       {slack = val;}
-    // void setLevel(int val)       {level = val;}
     void setasapV (int val)      {asapV = val;}
     void setalapV (int val)      {alapV = val;}
 
@@ -37,7 +35,6 @@ public:
     string getName() {return name;}
 
     int getSlack () {return slack;}
-    // unsigned int getLevel () {return level;}
     unsigned int getasapV () {return asapV;}
     unsigned int getalapV () {return alapV;}
 
